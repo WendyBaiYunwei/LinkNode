@@ -1,0 +1,34 @@
+.logo {
+	width: 15%;
+	position: relative;
+	left: 75%;
+}
+
+.navbar-brand,.navbar-nav {
+	position: relative;
+	left: 5%;
+}
+
+.navbar-brand {
+	font-size: 2em !important;
+}
+
+#canvas {
+	width: 100%;
+	background-color: #E0FFFF;
+	position: relative;
+	z-index: 0;
+}
+
+.foot {
+	text-align: center;
+}
+
+.off {
+	display: none;
+}
+
+.menu {
+	position: relative;
+	z-index: 1;
+}
