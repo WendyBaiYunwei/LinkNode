@@ -33,17 +33,22 @@ menu = document.querySelector('.menu');
 menu.classList.add('off');
 
 cvs.addEventListener("contextmenu", e=> {
-	clicked = e.target;
-	console.log(clicked.attributes.class);
+	clicked = e.target.attributes.class.value;
 	e.preventDefault();
 	menu.classList.remove('off');
 	menu.style.top = `${e.clientY-70}px`;
 	menu.style.left = `${e.clientX-20}px`;
-	addMenuListeners();
+	addMenuListeners(clicked);
 });
 
-function addMenuListeners() {
-	document.getElementById("rc-add").addEventListener("click", addNode);
+function addMenuListeners(clicked) {
+	if (clicked == "canvas") {
+		console.log('canvas');
+		document.getElementById("rc-add").addEventListener("click", addNode);
+	}
+	else {
+		console.log('hi');
+	}
 }
 
 function addNode(ev) {
