@@ -1,6 +1,10 @@
 const cvs = document.querySelector(".canvas");
+const realcvs = document.querySelector(".real-canvas");
+const ctx = realcvs.getContext("2d");
 const title = document.querySelector(".title");
 
+ctx.scale(0.1,0.1);
+ctx.strokeStyle = "black";
 /*----add title----*/
 var titleName;
 document.addEventListener("keydown", function(e) {
@@ -41,17 +45,17 @@ cvs.addEventListener("contextmenu", e=> {
 });
 
 function addMenuListeners(clicked) {
-	if (clicked.attributes.class.value == "canvas") {
+	if (clicked.attributes.class.value == "real-canvas" || clicked.attributes.class.value == "canvas") {
 		document.getElementById("rc-add").addEventListener("click", addNode);
 	}
 	else {
 		document.getElementById("rc-add").removeEventListener("click", addNode);
-		document.getElementById("rc-add").addEventListener("click", addNodeWithChildren(clicked));
+		document.getElementById("rc-add").addEventListener("click", addNodeWithParent(clicked));
 	}
 }
 
 
-function addNodeWithChildren(clicked) {
+function addNodeWithParent(clicked) {
 	menu.classList.add('off');
 
 	var nodeVar = {};
@@ -62,8 +66,8 @@ function addNodeWithChildren(clicked) {
 	
 	var node = document.createElement("span");
 	node.attributes.class = "node"+id;
-	node.style.left = clicked.getBoundingClientRect().left-20 + "px";
-	node.style.top = clicked.getBoundingClientRect().top-70 + "px";
+	node.style.left = clicked.getBoundingClientRect().left-10 + "px";
+	node.style.top = clicked.getBoundingClientRect().top-75 + "px";
 
 	cvs.appendChild(node);
 	var latestNode = nodes[id];
@@ -77,16 +81,28 @@ function addNodeWithChildren(clicked) {
 	console.log(id, parentId, parentNode.children);
 	
 	id++;
+	
+	
+
 	function move(e){
 		var x = e.clientX;
 		var y = e.clientY;
-		node.style.left = x-20 + "px";
-		node.style.top = y-70 + "px";
+		node.style.left = x-10 + "px";
+		node.style.top = y-75 + "px";
 	}
 
 	document.addEventListener('mousemove', move);
 	
 	cvs.onclick = function(e) {
+		// draw line
+		parentLeft = clicked.offsetLeft+20;
+		parentTop = clicked.offsetTop-40;
+		childLeft = node.offsetLeft+20;
+		childTop = node.offsetTop-40;
+		ctx.beginPath();
+		ctx.moveTo(parentLeft, parentTop);
+		ctx.lineTo(childLeft, childTop);
+		ctx.stroke();
 		document.removeEventListener('mousemove', move);
 	}
 }

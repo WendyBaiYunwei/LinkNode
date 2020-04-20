@@ -33,8 +33,18 @@ input::placeholder {
 .canvas {
 	width: 2000px;
     height: 1000px;
+	position: relative;
+	z-index: 97;
+}
+
+.real-canvas {
+	width: 2000px;
+    height: 1000px;
+	position: relative;
+	z-index: 98;
 	background-color: #E0FFFF;
 }
+
 .footer {
 	text-align: center;
 	position: fixed;
@@ -61,4 +71,5 @@ span {
     width: 30px;
     height: 20px;
 	background-color: #eab8f2;
+	z-index: 99;
 }
