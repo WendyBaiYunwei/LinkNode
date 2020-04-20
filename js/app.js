@@ -10,7 +10,6 @@ document.addEventListener("keydown", function(e) {
 			var newEl = document.createElement('h1');
 			newEl.innerHTML = input;
 			newEl.attributes.tag = "titleName";
-			//console.log(newEl.attributes.tag);
 			e.target.parentNode.replaceChild(newEl,title);
 		}
 		title.value = "";
@@ -28,26 +27,67 @@ document.addEventListener("click", function(e) {
 let menu;
 let nodes = [];
 let id = 0;
+let nodeAdded = false;
 
 menu = document.querySelector('.menu');
 menu.classList.add('off');
 
 cvs.addEventListener("contextmenu", e=> {
-	clicked = e.target.attributes.class.value;
 	e.preventDefault();
 	menu.classList.remove('off');
 	menu.style.top = `${e.clientY-70}px`;
 	menu.style.left = `${e.clientX-20}px`;
-	addMenuListeners(clicked);
+	addMenuListeners(e.target);
 });
 
 function addMenuListeners(clicked) {
-	if (clicked == "canvas") {
-		console.log('canvas');
+	if (clicked.attributes.class.value == "canvas") {
 		document.getElementById("rc-add").addEventListener("click", addNode);
 	}
 	else {
-		console.log('hi');
+		document.getElementById("rc-add").removeEventListener("click", addNode);
+		document.getElementById("rc-add").addEventListener("click", addNodeWithChildren(clicked));
+	}
+}
+
+
+function addNodeWithChildren(clicked) {
+	menu.classList.add('off');
+
+	var nodeVar = {};
+	nodeVar.id = id;
+	
+	nodeVar.children = [];
+	nodes.push(nodeVar);
+	
+	var node = document.createElement("span");
+	node.attributes.class = "node"+id;
+	node.style.left = clicked.getBoundingClientRect().left-20 + "px";
+	node.style.top = clicked.getBoundingClientRect().top-70 + "px";
+
+	cvs.appendChild(node);
+	var latestNode = nodes[id];
+	
+	clickedClass = clicked.attributes.class;
+	console.log(clickedClass);
+	
+	var parentId = Number(clickedClass.slice(4));
+	var parentNode = nodes[parentId];
+	parentNode.children.push(latestNode);
+	console.log(id, parentId, parentNode.children);
+	
+	id++;
+	function move(e){
+		var x = e.clientX;
+		var y = e.clientY;
+		node.style.left = x-20 + "px";
+		node.style.top = y-70 + "px";
+	}
+
+	document.addEventListener('mousemove', move);
+	
+	cvs.onclick = function(e) {
+		document.removeEventListener('mousemove', move);
 	}
 }
 
@@ -56,8 +96,8 @@ function addNode(ev) {
 	
 	var nodeVar = {};
 	nodeVar.id = id;
-	id++;
-	nodeVar.children = null;
+	
+	nodeVar.children = [];
 	nodes.push(nodeVar);
 	
 	var node = document.createElement("span");
@@ -66,7 +106,7 @@ function addNode(ev) {
 	node.style.top = ev.pageY-70 + "px";
 
 	cvs.appendChild(node);
-	ev.preventDefault();
+	id++;
 	
 	function move(e){
 		var x = e.clientX;
